@@ -258,22 +258,17 @@
                     letter.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
                 });
                 
-                requestAnimationFrame(() => {
-                    setTimeout(animateLetters, 100);
-                });
+                
             }
             
             // Fonction pour créer et animer des particules de sable
             function createSandParticles() {
                 // Sélectionner uniquement les 5 dernières lettres ("IGNER")
-                const lastFiveLetters = Array.from(letters).slice(-5);
+                const lastFiveLetters = Array.from(letters).slice(-8);
                 
                 lastFiveLetters.forEach((letter, index) => {
                     // Position de base de chaque lettre
                     const rect = letter.getBoundingClientRect();
-                    
-                    // Nombre de particules par lettre (augmenté pour plus de visibilité)
-                    const particleCount = Math.floor(Math.random() * 3) + 3; // 3 à 5 particules par lettre
                     
                     for (let i = 0; i < particleCount; i++) {
                         // Créer une particule de sable
@@ -321,7 +316,7 @@
                 });
                 
                 // Programmer la prochaine vague de particules
-                setTimeout(createSandParticles, 100); // Plus fréquent
+                setTimeout(createSandParticles, 10); // Plus fréquent
             }
             
             // Animation de désagrégation des lettres
