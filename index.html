@@ -60,7 +60,7 @@
         header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .logo {
@@ -160,6 +160,27 @@
             opacity: 0.7;
         }
 
+        /* Hamburger menu pour mobile */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        /* Media queries améliorées pour le responsive */
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
@@ -171,6 +192,111 @@
             
             .hero-text {
                 margin-bottom: 3rem;
+                bottom: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            nav ul {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 90;
+            }
+
+            nav.active ul {
+                display: flex;
+            }
+
+            nav ul li {
+                margin: 1.5rem 0;
+            }
+
+            nav ul li a {
+                font-size: 1.2rem;
+            }
+
+            /* Animation du menu hamburger */
+            .menu-toggle.active span:first-child {
+                transform: translateY(9px) rotate(45deg);
+            }
+
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle.active span:last-child {
+                transform: translateY(-9px) rotate(-45deg);
+            }
+        }
+
+        /* Améliorations supplémentaires pour les très petits écrans */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .slogan {
+                font-size: 1rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .animated-title {
+                font-size: 0.8rem;
+            }
+
+            .hero-text {
+                margin-bottom: 2rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+        }
+
+        /* Orientation paysage sur mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero-text {
+                margin-bottom: 1rem;
+                bottom: 0;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .slogan {
+                font-size: 0.9rem;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .animated-title {
+                font-size: 0.7rem;
+                height: 1.2rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .footer {
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -188,7 +314,12 @@
                         <div class="title-container" id="sand-title">DEEN DESIGNER</div>
                     </div>
                 </div>
-                <nav>
+                <div class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <nav id="mainNav">
                     <ul>
                         <li><a href="#projets">PROJETS</a></li>
                         <li><a href="#competences">COMPÉTENCES</a></li>
@@ -258,13 +389,17 @@
                     letter.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
                 });
                 
-                
+                // Répéter l'animation
+                requestAnimationFrame(animateLetters);
             }
             
             // Fonction pour créer et animer des particules de sable
             function createSandParticles() {
                 // Sélectionner uniquement les 5 dernières lettres ("IGNER")
                 const lastFiveLetters = Array.from(letters).slice(-8);
+                
+                // Définir le nombre de particules à créer
+                const particleCount = window.innerWidth < 768 ? 1 : 3; // Moins de particules sur mobile
                 
                 lastFiveLetters.forEach((letter, index) => {
                     // Position de base de chaque lettre
@@ -316,7 +451,7 @@
                 });
                 
                 // Programmer la prochaine vague de particules
-                setTimeout(createSandParticles, 10); // Plus fréquent
+                setTimeout(createSandParticles, window.innerWidth < 768 ? 50 : 10); // Ajuster la fréquence selon la taille d'écran
             }
             
             // Animation de désagrégation des lettres
@@ -336,8 +471,11 @@
                 letter.style.color = 'rgba(255,255,255,1)';
                 letter.style.textShadow = '0 0 4px rgba(255,255,255,0.9)';
                 
+                // Ajuster le nombre de particules selon la taille d'écran
+                const particleCount = window.innerWidth < 768 ? 5 : 15;
+                
                 // Créer plusieurs particules pour la désagrégation
-                for (let i = 0; i < 15; i++) { // Plus de particules
+                for (let i = 0; i < particleCount; i++) {
                     setTimeout(() => {
                         const particle = document.createElement('div');
                         particle.className = 'sand-particle';
@@ -388,8 +526,8 @@
             
             // Créer des particules flottantes sur toute la page
             function createFloatingParticles() {
-                // Nombre de particules à créer (augmenté pour plus de densité)
-                const totalParticles = 200;
+                // Ajuster le nombre de particules selon la taille d'écran
+                const totalParticles = window.innerWidth < 768 ? 50 : 200;
                 
                 for (let i = 0; i < totalParticles; i++) {
                     setTimeout(() => {
@@ -437,6 +575,47 @@
                 // Recréer plus fréquemment
                 setTimeout(createFloatingParticles, 7000);
             }
+            
+            // Gestion du menu mobile
+            const menuToggle = document.getElementById('menuToggle');
+            const mainNav = document.getElementById('mainNav');
+            
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    mainNav.classList.toggle('active');
+                });
+                
+                // Fermer le menu lorsqu'un lien est cliqué
+                const navLinks = document.querySelectorAll('nav ul li a');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        menuToggle.classList.remove('active');
+                        mainNav.classList.remove('active');
+                    });
+                });
+            }
+            
+            // Fonction pour gérer le redimensionnement
+            function handleResize() {
+                // Retirer toutes les particules existantes
+                document.querySelectorAll('.floating-particle, .sand-particle').forEach(particle => {
+                    particle.remove();
+                });
+                
+                // Recréer les animations adaptées à la nouvelle taille
+                createFloatingParticles();
+                
+                // Mettre à jour les positions des éléments animés
+                // Nécessaire car les dimensions de l'écran ont changé
+                const letters = document.querySelectorAll('.letter');
+                letters.forEach(letter => {
+                    letter.style.transform = 'none';
+                });
+            }
+            
+            // Écouter l'événement de redimensionnement
+            window.addEventListener('resize', handleResize);
             
             // Démarrer toutes les animations
             animateLetters();
