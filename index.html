@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arnaud Barotteaux | Développeur Web</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .hero {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            background-color: #f5f5f5;
+        }
+
+        .hero-image {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 2;
+        }
+
+        .content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            z-index: 3;
+            color: white;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            opacity: 0.7;
+        }
+        
+        .animated-title {
+            position: relative;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            opacity: 0.8;
+            margin-top: 5px;
+            overflow: visible;
+            height: 1.5rem;
+        }
+        
+        /* Style pour le titre avec effet sable */
+        .title-container {
+            position: relative;
+            white-space: nowrap;
+            color: white;
+            z-index: 1;
+            display: flex;
+            justify-content: center; /* Centre le titre horizontalement */
+        }
+        
+        /* Style pour chaque lettre individuelle */
+        .letter {
+            display: inline-block;
+            position: relative;
+            color: white;
+            text-shadow: 0 0 1px rgba(255,255,255,0.4);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        /* Particules flottantes sur toute la page */
+        .floating-particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .hero-text {
+            max-width: 800px;
+            margin-bottom: 6rem;
+            position: relative;
+            bottom: 50px; /* Remonte le slogan de 50px */
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .slogan {
+            font-size: 1.2rem;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .footer {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content {
+                padding: 1.5rem;
+            }
+            
+            .hero-text {
+                margin-bottom: 3rem;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body>
+    <div class="hero">
+        <img src="/desert.jpg" alt="Arbre isolé dans un désert de neige" class="hero-image">
+        <div class="overlay"></div>
+        <div class="content">
+            <header>
+                <div class="logo">
+                    ARNAUD BAROTTEAUX
+                    <div class="animated-title">
+                        <div class="title-container" id="sand-title">DEEN DESIGNER</div>
+                    </div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#projets">PROJETS</a></li>
+                        <li><a href="#competences">COMPÉTENCES</a></li>
+                        <li><a href="#contact">CONTACT</a></li>
+                    </ul>
+                </nav>
+            </header>
+            
+            <div class="hero-text">
+                <h1>Développeur Web</h1>
+                <p class="slogan">Donnez vie à vos idées<br> avec le bon code tout prend racine.</p>
+            </div>
+            
+            <div class="footer">
+                &copy; 2025 Arnaud Barotteaux. Tous droits réservés.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Préparation du titre avec des lettres individuelles
+            const titleContainer = document.getElementById('sand-title');
+            const titleText = titleContainer.textContent;
+            titleContainer.textContent = '';
+            
+            // Créer un span pour chaque lettre
+            for (let i = 0; i < titleText.length; i++) {
+                const letter = document.createElement('span');
+                letter.textContent = titleText[i];
+                letter.className = 'letter';
+                titleContainer.appendChild(letter);
+            }
+            
+            // Créer un conteneur de superposition pour l'animation
+            const particleOverlay = document.createElement('div');
+            particleOverlay.style.position = 'absolute';
+            particleOverlay.style.top = '0';
+            particleOverlay.style.left = '0';
+            particleOverlay.style.width = '100%';
+            particleOverlay.style.height = '100%';
+            particleOverlay.style.pointerEvents = 'none';
+            particleOverlay.style.zIndex = '2';
+            titleContainer.appendChild(particleOverlay);
+            
+            // Animation du titre DEEN DESIGNER
+            const letters = document.querySelectorAll('.letter');
+            
+            // Effet de grain/tremblement léger sur les lettres
+            function animateLetters() {
+                letters.forEach(letter => {
+                    // Variation d'opacité pour effet de grain
+                    letter.style.opacity = 0.7 + Math.random() * 0.3;
+                    
+                    // Variation de position pour effet tremblement léger
+                    const xOffset = (Math.random() - 0.5) * 0.8;
+                    const yOffset = (Math.random() - 0.5) * 0.8;
+                    letter.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+                });
+                
+                requestAnimationFrame(() => {
+                    setTimeout(animateLetters, 100);
+                });
+            }
+            
+            // Fonction pour créer et animer des particules de sable
+            function createSandParticles() {
+                letters.forEach((letter, index) => {
+                    // Position de base de chaque lettre
+                    const rect = letter.getBoundingClientRect();
+                    
+                    // Nombre de particules par lettre (variable)
+                    const particleCount = Math.floor(Math.random() * 2) + 1;
+                    
+                    for (let i = 0; i < particleCount; i++) {
+                        // Créer une particule de sable
+                        const sandParticle = document.createElement('div');
+                        sandParticle.className = 'sand-particle';
+                        sandParticle.style.position = 'absolute';
+                        sandParticle.style.width = Math.random() * 1.2 + 0.4 + 'px';
+                        sandParticle.style.height = Math.random() * 1.2 + 0.4 + 'px';
+                        sandParticle.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                        sandParticle.style.borderRadius = '50%';
+                        
+                        // Position initiale de la particule (relative à la lettre)
+                        const offsetX = Math.random() * letter.offsetWidth;
+                        const offsetY = Math.random() * letter.offsetHeight;
+                        
+                        // Utilise la position absolue par rapport au viewport, puis ajuste
+                        sandParticle.style.left = (rect.left + offsetX) + 'px';
+                        sandParticle.style.top = (rect.top + offsetY) + 'px';
+                        
+                        // Ajoute au body pour une animation plus fluide
+                        document.body.appendChild(sandParticle);
+                        
+                        // Animation de la particule de sable
+                        anime({
+                            targets: sandParticle,
+                            translateX: function() {
+                                return anime.random(30, 120) * (Math.random() > 0.5 ? 1 : -1);
+                            },
+                            translateY: function() {
+                                return anime.random(-10, 25);
+                            },
+                            opacity: 0,
+                            scale: [1, 0.5],
+                            duration: anime.random(3000, 6000),
+                            easing: 'easeOutQuad',
+                            complete: function() {
+                                sandParticle.remove();
+                            }
+                        });
+                    }
+                });
+                
+                // Programmer la prochaine vague de particules
+                setTimeout(createSandParticles, 300);
+            }
+            
+            // Animation de désagrégation des lettres
+            function createLetterDisintegration() {
+                // Choisir une lettre aléatoire
+                const randomIndex = Math.floor(Math.random() * letters.length);
+                const letter = letters[randomIndex];
+                
+                // Position de la lettre
+                const rect = letter.getBoundingClientRect();
+                
+                // Effet visuel temporaire sur la lettre
+                const originalColor = letter.style.color || 'white';
+                letter.style.color = 'rgba(255,255,255,0.95)';
+                
+                // Créer plusieurs particules pour la désagrégation
+                for (let i = 0; i < 12; i++) {
+                    setTimeout(() => {
+                        const particle = document.createElement('div');
+                        particle.style.position = 'absolute';
+                        particle.style.width = Math.random() * 1.5 + 0.5 + 'px';
+                        particle.style.height = Math.random() * 1.5 + 0.5 + 'px';
+                        particle.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                        particle.style.borderRadius = '50%';
+                        
+                        // Position initiale de la particule
+                        const offsetX = Math.random() * letter.offsetWidth;
+                        const offsetY = Math.random() * letter.offsetHeight;
+                        
+                        particle.style.left = (rect.left + offsetX) + 'px';
+                        particle.style.top = (rect.top + offsetY) + 'px';
+                        
+                        document.body.appendChild(particle);
+                        
+                        // Animation de la particule
+                        anime({
+                            targets: particle,
+                            translateX: anime.random(50, 150) * (Math.random() > 0.5 ? 1 : -1),
+                            translateY: anime.random(-20, 50),
+                            opacity: 0,
+                            scale: [1, 0],
+                            duration: anime.random(1500, 3000),
+                            easing: 'easeOutQuad',
+                            complete: function() {
+                                particle.remove();
+                            }
+                        });
+                    }, i * 50);
+                }
+                
+                // Restaurer l'apparence de la lettre
+                setTimeout(() => {
+                    letter.style.color = originalColor;
+                }, 500);
+                
+                // Programmer la prochaine désagrégation
+                setTimeout(createLetterDisintegration, Math.random() * 2000 + 1000);
+            }
+            
+            // Créer des particules flottantes sur toute la page
+            function createFloatingParticles() {
+                // Nombre de particules à créer (augmenté pour plus de densité)
+                const totalParticles = 200;
+                
+                for (let i = 0; i < totalParticles; i++) {
+                    setTimeout(() => {
+                        // Créer une particule
+                        const particle = document.createElement('div');
+                        particle.className = 'floating-particle';
+                        
+                        // Taille aléatoire mais petite
+                        const size = Math.random() * 1.2 + 0.4;
+                        particle.style.width = size + 'px';
+                        particle.style.height = size + 'px';
+                        
+                        // Position initiale aléatoire
+                        const startX = Math.random() * window.innerWidth;
+                        const startY = Math.random() * window.innerHeight;
+                        
+                        particle.style.left = startX + 'px';
+                        particle.style.top = startY + 'px';
+                        particle.style.opacity = Math.random() * 0.5 + 0.2;
+                        
+                        document.body.appendChild(particle);
+                        
+                        // Animation de flottement plus rapide et plus aléatoire
+                        anime({
+                            targets: particle,
+                            translateX: function() {
+                                return anime.random(200, 500) * (Math.random() > 0.5 ? 1 : -1);
+                            },
+                            translateY: function() {
+                                return anime.random(-100, 150) * (Math.random() > 0.5 ? 1 : -1);
+                            },
+                            opacity: [
+                                { value: Math.random() * 0.7 + 0.3, duration: 500 },
+                                { value: 0, duration: 500, delay: 5000 }
+                            ],
+                            duration: 6000, // Plus rapide
+                            easing: 'easeOutSine',
+                            complete: function() {
+                                particle.remove();
+                            }
+                        });
+                    }, i * 80); // Création plus rapprochée
+                }
+                
+                // Recréer plus fréquemment
+                setTimeout(createFloatingParticles, 7000);
+            }
+            
+            // Démarrer toutes les animations
+            animateLetters();
+            setTimeout(createSandParticles, 500);
+            setTimeout(createLetterDisintegration, 2000);
+            createFloatingParticles();
+        });
+    </script>
+</body>
+</html>
