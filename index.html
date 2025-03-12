@@ -119,13 +119,20 @@
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
         
+        /* Style pour les 5 dernières lettres */
+        .letter.last-five {
+            color: rgba(255,255,255,0.95);
+            text-shadow: 0 0 2px rgba(255,255,255,0.7);
+        }
+        
         /* Particules flottantes sur toute la page */
-        .floating-particle {
+        .floating-particle, .sand-particle {
             position: absolute;
             background-color: rgba(255, 255, 255, 0.7);
             border-radius: 50%;
             pointer-events: none;
             z-index: 10;
+            box-shadow: 0 0 2px rgba(255,255,255,0.5);
         }
 
         .hero-text {
@@ -213,6 +220,12 @@
                 const letter = document.createElement('span');
                 letter.textContent = titleText[i];
                 letter.className = 'letter';
+                
+                // Ajouter une classe spéciale pour les 5 dernières lettres
+                if (i >= titleText.length - 5) {
+                    letter.classList.add('last-five');
+                }
+                
                 titleContainer.appendChild(letter);
             }
             
@@ -232,13 +245,16 @@
             
             // Effet de grain/tremblement léger sur les lettres
             function animateLetters() {
-                letters.forEach(letter => {
+                // Sélectionner uniquement les 5 dernières lettres pour l'animation de tremblement
+                const lastFiveLetters = document.querySelectorAll('.letter.last-five');
+                
+                lastFiveLetters.forEach(letter => {
                     // Variation d'opacité pour effet de grain
                     letter.style.opacity = 0.7 + Math.random() * 0.3;
                     
                     // Variation de position pour effet tremblement léger
-                    const xOffset = (Math.random() - 0.5) * 0.8;
-                    const yOffset = (Math.random() - 0.5) * 0.8;
+                    const xOffset = (Math.random() - 0.5) * 1.2; // Plus prononcé
+                    const yOffset = (Math.random() - 0.5) * 1.2; // Plus prononcé
                     letter.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
                 });
                 
@@ -249,22 +265,26 @@
             
             // Fonction pour créer et animer des particules de sable
             function createSandParticles() {
-                letters.forEach((letter, index) => {
+                // Sélectionner uniquement les 5 dernières lettres ("IGNER")
+                const lastFiveLetters = Array.from(letters).slice(-5);
+                
+                lastFiveLetters.forEach((letter, index) => {
                     // Position de base de chaque lettre
                     const rect = letter.getBoundingClientRect();
                     
-                    // Nombre de particules par lettre (variable)
-                    const particleCount = Math.floor(Math.random() * 2) + 1;
+                    // Nombre de particules par lettre (augmenté pour plus de visibilité)
+                    const particleCount = Math.floor(Math.random() * 3) + 3; // 3 à 5 particules par lettre
                     
                     for (let i = 0; i < particleCount; i++) {
                         // Créer une particule de sable
                         const sandParticle = document.createElement('div');
                         sandParticle.className = 'sand-particle';
                         sandParticle.style.position = 'absolute';
-                        sandParticle.style.width = Math.random() * 1.2 + 0.4 + 'px';
-                        sandParticle.style.height = Math.random() * 1.2 + 0.4 + 'px';
-                        sandParticle.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                        sandParticle.style.width = Math.random() * 2 + 0.8 + 'px'; // Particules plus grosses
+                        sandParticle.style.height = Math.random() * 2 + 0.8 + 'px'; // Particules plus grosses
+                        sandParticle.style.backgroundColor = 'rgba(255, 255, 255, 1)'; // Opacité maximale
                         sandParticle.style.borderRadius = '50%';
+                        sandParticle.style.zIndex = '9999'; // S'assurer qu'elles sont au-dessus
                         
                         // Position initiale de la particule (relative à la lettre)
                         const offsetX = Math.random() * letter.offsetWidth;
@@ -281,14 +301,17 @@
                         anime({
                             targets: sandParticle,
                             translateX: function() {
-                                return anime.random(30, 120) * (Math.random() > 0.5 ? 1 : -1);
+                                return anime.random(50, 150) * (Math.random() > 0.5 ? 1 : -1);
                             },
                             translateY: function() {
-                                return anime.random(-10, 25);
+                                return anime.random(-10, 50);
                             },
-                            opacity: 0,
+                            opacity: [
+                                { value: 1, duration: 0 },
+                                { value: 0, duration: 2000 }
+                            ],
                             scale: [1, 0.5],
-                            duration: anime.random(3000, 6000),
+                            duration: anime.random(2000, 4000), // Animation plus rapide
                             easing: 'easeOutQuad',
                             complete: function() {
                                 sandParticle.remove();
@@ -298,31 +321,37 @@
                 });
                 
                 // Programmer la prochaine vague de particules
-                setTimeout(createSandParticles, 300);
+                setTimeout(createSandParticles, 100); // Plus fréquent
             }
             
             // Animation de désagrégation des lettres
             function createLetterDisintegration() {
-                // Choisir une lettre aléatoire
-                const randomIndex = Math.floor(Math.random() * letters.length);
-                const letter = letters[randomIndex];
+                // Sélectionner uniquement les 5 dernières lettres (IGNER)
+                const lastFiveLetters = document.querySelectorAll('.letter.last-five');
+                
+                // Choisir une lettre aléatoire parmi les 5 dernières
+                const randomIndex = Math.floor(Math.random() * lastFiveLetters.length);
+                const letter = lastFiveLetters[randomIndex];
                 
                 // Position de la lettre
                 const rect = letter.getBoundingClientRect();
                 
                 // Effet visuel temporaire sur la lettre
                 const originalColor = letter.style.color || 'white';
-                letter.style.color = 'rgba(255,255,255,0.95)';
+                letter.style.color = 'rgba(255,255,255,1)';
+                letter.style.textShadow = '0 0 4px rgba(255,255,255,0.9)';
                 
                 // Créer plusieurs particules pour la désagrégation
-                for (let i = 0; i < 12; i++) {
+                for (let i = 0; i < 15; i++) { // Plus de particules
                     setTimeout(() => {
                         const particle = document.createElement('div');
+                        particle.className = 'sand-particle';
                         particle.style.position = 'absolute';
-                        particle.style.width = Math.random() * 1.5 + 0.5 + 'px';
-                        particle.style.height = Math.random() * 1.5 + 0.5 + 'px';
-                        particle.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                        particle.style.width = Math.random() * 2 + 0.8 + 'px'; // Plus grosses
+                        particle.style.height = Math.random() * 2 + 0.8 + 'px'; // Plus grosses
+                        particle.style.backgroundColor = 'rgba(255, 255, 255, 1)';
                         particle.style.borderRadius = '50%';
+                        particle.style.zIndex = '9999';
                         
                         // Position initiale de la particule
                         const offsetX = Math.random() * letter.offsetWidth;
@@ -333,29 +362,33 @@
                         
                         document.body.appendChild(particle);
                         
-                        // Animation de la particule
+                        // Animation de la particule - uniquement vers la droite et TRÈS lentement
                         anime({
                             targets: particle,
-                            translateX: anime.random(50, 150) * (Math.random() > 0.5 ? 1 : -1),
-                            translateY: anime.random(-20, 50),
-                            opacity: 0,
+                            translateX: anime.random(40, 90), // Uniquement vers la droite
+                            translateY: anime.random(-3, 3), // Très légère variation verticale
+                            opacity: [
+                                { value: 1, duration: 0 },
+                                { value: 0, duration: 6000 }
+                            ],
                             scale: [1, 0],
-                            duration: anime.random(1500, 3000),
-                            easing: 'easeOutQuad',
+                            duration: anime.random(12000, 16000), // Extrêmement lent
+                            easing: 'linear', // Mouvement constant
                             complete: function() {
                                 particle.remove();
                             }
                         });
-                    }, i * 50);
+                    }, i * 60); // Plus espacé
                 }
                 
                 // Restaurer l'apparence de la lettre
                 setTimeout(() => {
                     letter.style.color = originalColor;
+                    letter.style.textShadow = '0 0 2px rgba(255,255,255,0.7)';
                 }, 500);
                 
                 // Programmer la prochaine désagrégation
-                setTimeout(createLetterDisintegration, Math.random() * 2000 + 1000);
+                setTimeout(createLetterDisintegration, Math.random() * 2000 + 1000); // Moins fréquent
             }
             
             // Créer des particules flottantes sur toute la page
